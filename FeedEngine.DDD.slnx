@@ -18,9 +18,9 @@
     <Project Path="src/Modules/Feed/Feed.Domain/Feed.Domain.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
-    <Project Path="Identity.Infrastructure/Identity.Infrastructure.csproj" Id="4fc0dfa8-6040-46ef-8c87-00891cbb1404" />
     <Project Path="src/Modules/Identity/Identity.Application/Identity.Application.csproj" />
     <Project Path="src/Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/Notification/">
     <Project Path="src/Modules/Notification/Notification.Application/Notification.Application.csproj" />
