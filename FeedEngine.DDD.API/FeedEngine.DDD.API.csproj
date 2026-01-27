@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Modules\Content\" />
+    <Folder Include="Modules\Feed\" />
+    <Folder Include="Modules\Identity\" />
+    <Folder Include="Modules\SocialGraph\" />
+    <Folder Include="Modules\Notification\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Identity.Infrastructure\Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\src\Modules\Content\Content.Infrastructure\Content.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

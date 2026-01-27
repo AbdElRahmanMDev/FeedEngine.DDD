@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/API/">
+    <Project Path="FeedEngine.DDD.API/FeedEngine.DDD.API.csproj" Id="0e7e6bae-ea52-4780-9e75-c91285dc3bbd" />
+  </Folder>
   <Folder Name="/BuildingBlocks/">
     <Project Path="src/BuildingBlocks/BuildingBlocks.Application/BuildingBlocks.Application.csproj" />
     <Project Path="src/BuildingBlocks/BuildingBlocks.Domain/BuildingBlocks.Domain.csproj" />
@@ -15,6 +18,7 @@
     <Project Path="src/Modules/Feed/Feed.Domain/Feed.Domain.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
+    <Project Path="Identity.Infrastructure/Identity.Infrastructure.csproj" Id="4fc0dfa8-6040-46ef-8c87-00891cbb1404" />
     <Project Path="src/Modules/Identity/Identity.Application/Identity.Application.csproj" />
     <Project Path="src/Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
   </Folder>

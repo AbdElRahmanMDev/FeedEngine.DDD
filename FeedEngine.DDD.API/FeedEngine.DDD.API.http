@@ -1,0 +1,6 @@
+@FeedEngine.DDD.API_HostAddress = http://localhost:5226
+
+GET {{FeedEngine.DDD.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
