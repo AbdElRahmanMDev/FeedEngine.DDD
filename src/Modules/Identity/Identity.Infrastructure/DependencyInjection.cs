@@ -10,7 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var cs = configuration.GetConnectionString("AppData") ??
+        var cs = configuration.GetConnectionString("AppDb") ??
             throw new InvalidOperationException("Connection string 'AppData' not found.");
 
         services.AddDbContext<UsersDbContext>(option =>
@@ -18,7 +18,6 @@ public static class DependencyInjection
             option.UseSqlServer(cs, sql =>
             {
                 sql.MigrationsAssembly(typeof(UsersDbContext).Assembly.FullName);
-
                 sql.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schema.Users);
             });
         });
