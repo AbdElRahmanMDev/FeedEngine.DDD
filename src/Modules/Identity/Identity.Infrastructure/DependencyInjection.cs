@@ -1,4 +1,6 @@
-﻿using Identity.Infrastructure.Database;
+﻿using Identity.Domain;
+using Identity.Infrastructure.Database;
+using Identity.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,7 @@ public static class DependencyInjection
     {
         var cs = configuration.GetConnectionString("AppDb") ??
             throw new InvalidOperationException("Connection string 'AppData' not found.");
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddDbContext<UsersDbContext>(option =>
         {

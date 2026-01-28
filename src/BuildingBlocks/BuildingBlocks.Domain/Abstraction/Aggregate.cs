@@ -9,7 +9,6 @@
         {
             _domainEvents.Add(domainEvent);
         }
-
         public IDomainEvent[] ClearDomainEvents()
         {
             IDomainEvent[] dequeuedEvents = _domainEvents.ToArray();
