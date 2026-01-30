@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +24,6 @@
     <Folder Include="User\Commands\ChangePassword\" />
     <Folder Include="User\Commands\DeactivateUser\" />
     <Folder Include="User\Commands\VerifyEmail\" />
-    <Folder Include="User\Queries\GetUserById\" />
-    <Folder Include="User\Queries\GetUserByEmail\" />
-    <Folder Include="User\Queries\GetUserByUsername\" />
-    <Folder Include="User\Queries\GetMyAccount\" />
   </ItemGroup>
 
 </Project>

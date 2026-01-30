@@ -1,6 +1,8 @@
 ﻿using BuildingBlocks.Application.Abstraction;
+using BuildingBlocks.Application.Abstraction.Data;
 using Identity.Domain;
 using Identity.Infrastructure.Database;
+using Identity.Infrastructure.Database.Connections;
 using Identity.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -27,6 +29,8 @@ public static class DependencyInjection
         });
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
 
+        services.AddSingleton<ISqlConnectionFactory>(_ =>
+            new SqlConnectionFactory(configuration.GetConnectionString("AppDb")!));
         return services;
     }
 }

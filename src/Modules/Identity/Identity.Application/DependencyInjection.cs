@@ -1,15 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Application;
 
-public static class DependcyInjection
+public static class DependencyInjection
 {
     public static IServiceCollection AddIdentityApplication(this IServiceCollection services)
     {
         services.AddMediatR(config =>
-        {
-            config.RegisterServicesFromAssemblies(typeof(DependcyInjection).Assembly);
-        });
+            config.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
 
         return services;
     }
