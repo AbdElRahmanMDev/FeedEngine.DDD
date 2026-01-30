@@ -10,5 +10,7 @@ namespace Identity.Domain
 
         Task AddAsync(User user, CancellationToken ct = default);
         Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default);
+        Task<int> SaveChangesAsync(CancellationToken ct = default);
+
     }
 }

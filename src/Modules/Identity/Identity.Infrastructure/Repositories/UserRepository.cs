@@ -1,17 +1,23 @@
 ﻿using Identity.Domain;
 using Identity.Domain.Models;
 using Identity.Domain.ValueObjects;
+using Identity.Infrastructure.Database;
 
 namespace Identity.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    public Task AddAsync(User user, CancellationToken ct = default)
+    private readonly UsersDbContext _usersDbContext;
+    public UserRepository(UsersDbContext usersDbContext)
     {
-        throw new NotImplementedException();
+        _usersDbContext = usersDbContext;
+    }
+    public async Task AddAsync(User user, CancellationToken ct = default)
+    {
+        await _usersDbContext.Users.AddAsync(user, ct);
     }
 
-    public Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)
+    public async Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)
     {
         throw new NotImplementedException();
     }
@@ -25,4 +31,7 @@ public class UserRepository : IUserRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<int> SaveChangesAsync(CancellationToken ct = default)
+        => _usersDbContext.SaveChangesAsync(ct);
 }

@@ -1,4 +1,5 @@
-﻿using Identity.Domain;
+﻿using BuildingBlocks.Application.Abstraction;
+using Identity.Domain;
 using Identity.Infrastructure.Database;
 using Identity.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ public static class DependencyInjection
                 sql.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schema.Users);
             });
         });
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
+
         return services;
     }
 }

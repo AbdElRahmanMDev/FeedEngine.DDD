@@ -1,11 +1,13 @@
-﻿using BuildingBlocks.Domain.Abstraction;
+﻿using BuildingBlocks.Application.Abstraction;
+using BuildingBlocks.Domain.Abstraction;
+using Identity.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Identity.Infrastructure.Database
 {
-    public class UsersDbContext : DbContext
+    public class UsersDbContext : DbContext, IUnitOfWork
     {
         private readonly IPublisher _publisher;
 
@@ -14,6 +16,8 @@ namespace Identity.Infrastructure.Database
         {
             _publisher = publisher;
         }
+        public DbSet<User> Users { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

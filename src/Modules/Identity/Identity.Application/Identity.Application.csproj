@@ -11,7 +11,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />
     <ProjectReference Include="..\Identity.Domain\Identity.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DomainEventHandlers\" />
+    <Folder Include="User\Commands\ChangeEmail\" />
+    <Folder Include="User\Commands\ChangeUsername\" />
+    <Folder Include="User\Commands\ChangePassword\" />
+    <Folder Include="User\Commands\DeactivateUser\" />
+    <Folder Include="User\Commands\VerifyEmail\" />
+    <Folder Include="User\Queries\GetUserById\" />
+    <Folder Include="User\Queries\GetUserByEmail\" />
+    <Folder Include="User\Queries\GetUserByUsername\" />
+    <Folder Include="User\Queries\GetMyAccount\" />
   </ItemGroup>
 
 </Project>
