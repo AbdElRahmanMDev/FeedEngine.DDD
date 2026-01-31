@@ -1,3 +1,5 @@
+using FeedEngine.DDD.API.Extensions;
+using FeedEngine.DDD.API.Middleware;
 using Identity.Infrastructure;
 using Serilog;
 
@@ -22,12 +24,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();

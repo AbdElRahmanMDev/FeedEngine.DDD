@@ -98,6 +98,18 @@ namespace Identity.Domain.Models
             Raise(new UserDeactivatedDomainEvent(Id, nowUtc));
         }
 
+        public void VerifyEmail()
+        {
+            EnsureActive();
+
+            if (EmailVerified) return;
+
+            EmailVerified = true;
+            Touch(DateTime.UtcNow);
+
+            Raise(new UserEmailVerifiedDomainEvent(Id, DateTime.UtcNow));
+        }
+
         private void EnsureActive()
         {
             if (Status != AccountStatus.Active)

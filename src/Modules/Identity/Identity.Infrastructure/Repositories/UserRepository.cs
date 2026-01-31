@@ -2,6 +2,7 @@
 using Identity.Domain.Models;
 using Identity.Domain.ValueObjects;
 using Identity.Infrastructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Repositories;
 
@@ -12,25 +13,16 @@ public class UserRepository : IUserRepository
     {
         _usersDbContext = usersDbContext;
     }
-    public async Task AddAsync(User user, CancellationToken ct = default)
-    {
-        await _usersDbContext.Users.AddAsync(user, ct);
-    }
+    public async Task AddAsync(User user, CancellationToken ct = default) => await _usersDbContext.Users.AddAsync(user, ct);
 
-    public async Task<bool> EmailExistsAsync(Email email, CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<bool> EmailExistsAsync(string email, CancellationToken ct = default) =>
+     _usersDbContext.Users
+         .AsNoTracking()
+         .AnyAsync(u => u.Email.Value == email, ct);
+    public async Task<bool> UsernameExistsAsync(string username, CancellationToken ct = default) => await _usersDbContext.Users.AnyAsync(x => x.Username.Value == username, ct);
 
-    public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) => await _usersDbContext.Users.Where(x => x.Id == id).SingleOrDefaultAsync();
 
-    public Task<bool> UsernameExistsAsync(Username username, CancellationToken ct = default)
-    {
-        throw new NotImplementedException();
-    }
 
     public Task<int> SaveChangesAsync(CancellationToken ct = default)
         => _usersDbContext.SaveChangesAsync(ct);
