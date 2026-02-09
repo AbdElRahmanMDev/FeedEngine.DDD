@@ -16,26 +16,21 @@ internal sealed class DeactivateUserCommandHandler : ICommandHandler<DeactivateU
 
     public async Task<Result<DeactivateUserResult>> Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var userId = UserId.Of(request.UserId);
-            var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
-            if (user is null)
-                return Result.Failure<DeactivateUserResult>(
-                    new Error("User.NotFound", "User not found"));
+        var userId = UserId.Of(request.UserId);
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
-            var nowUtc = DateTime.UtcNow;
-            user.Deactivate(nowUtc);
-
-            await _userRepository.SaveChangesAsync(cancellationToken);
-
-            return Result.Success(new DeactivateUserResult(user.Id.Value));
-        }
-        catch (DomainException ex)
-        {
+        if (user is null)
             return Result.Failure<DeactivateUserResult>(
-                new Error("User.DomainError", ex.Message));
-        }
+                new Error("User.NotFound", "User not found"));
+
+        var nowUtc = DateTime.UtcNow;
+        user.Deactivate(nowUtc);
+
+        await _userRepository.SaveChangesAsync(cancellationToken);
+
+        return Result.Success(new DeactivateUserResult(user.Id.Value));
+
+
     }
 }

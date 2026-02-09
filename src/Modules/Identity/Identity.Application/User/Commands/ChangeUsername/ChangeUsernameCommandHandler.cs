@@ -16,26 +16,22 @@ internal sealed class ChangeUsernameCommandHandler : ICommandHandler<ChangeUsern
 
     public async Task<Result<ChangeUsernameResult>> Handle(ChangeUsernameCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var userId = UserId.Of(request.UserId);
-            var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        var userId = UserId.Of(request.UserId);
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
-            if (user is null)
-                return Result.Failure<ChangeUsernameResult>(
-                    new Error("User.NotFound", "User not found"));
-
-            var nowUtc = DateTime.UtcNow;
-            user.ChangeUsername(request.NewUsername, nowUtc);
-
-            await _userRepository.SaveChangesAsync(cancellationToken);
-
-            return Result.Success(new ChangeUsernameResult(user.Id.Value, user.Username.Value));
-        }
-        catch (DomainException ex)
-        {
+        if (user is null)
             return Result.Failure<ChangeUsernameResult>(
-                new Error("User.DomainError", ex.Message));
-        }
+                new Error("User.NotFound", "User not found"));
+
+        if (await _userRepository.UsernameExistsAsync(request.NewUsername, cancellationToken))
+            return Result.Failure<ChangeUsernameResult>(
+                new Error("User.UsernameExists", "Username already exists"));
+
+        var nowUtc = DateTime.UtcNow;
+        user.ChangeUsername(request.NewUsername, nowUtc);
+
+        await _userRepository.SaveChangesAsync(cancellationToken);
+
+        return Result.Success(new ChangeUsernameResult(user.Id.Value, user.Username.Value));
     }
 }

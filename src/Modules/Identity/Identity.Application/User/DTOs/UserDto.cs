@@ -7,5 +7,5 @@ public sealed record UserDto(
     bool EmailVerified,
     int Status,
     DateTime CreatedAt,
-    DateTime UpdatedAt
+    DateTime? UpdatedAt = null
 );

@@ -1,4 +1,5 @@
-﻿using Identity.Domain.Exceptions;
+﻿using FluentValidation;
+using Identity.Domain.Exceptions;
 using System.Net;
 using System.Text.Json;
 
@@ -34,6 +35,31 @@ public sealed class GlobalExceptionHandlingMiddleware : IMiddleware
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Validation error");
+
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.Response.ContentType = "application/problem+json";
+
+            var errors = ex.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            var problem = new
+            {
+                type = "validation_error",
+                title = "One or more validation errors occurred.",
+                status = context.Response.StatusCode,
+                errors
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
+        }
+
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception");
@@ -51,5 +77,6 @@ public sealed class GlobalExceptionHandlingMiddleware : IMiddleware
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
+
     }
 }

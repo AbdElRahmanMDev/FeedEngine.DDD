@@ -20,7 +20,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Modules\Content\" />
     <Folder Include="Modules\Feed\" />
-    <Folder Include="Modules\Identity\" />
     <Folder Include="Modules\SocialGraph\" />
     <Folder Include="Modules\Notification\" />
   </ItemGroup>

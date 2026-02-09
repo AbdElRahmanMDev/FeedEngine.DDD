@@ -16,26 +16,22 @@ internal sealed class ChangeEmailCommandHandler : ICommandHandler<ChangeEmailCom
 
     public async Task<Result<ChangeEmailResult>> Handle(ChangeEmailCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var userId = UserId.Of(request.UserId);
-            var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+        var userId = UserId.Of(request.UserId);
+        var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
-            if (user is null)
-                return Result.Failure<ChangeEmailResult>(
-                    new Error("User.NotFound", "User not found"));
-
-            var nowUtc = DateTime.UtcNow;
-            user.ChangeEmail(request.NewEmail, nowUtc);
-
-            await _userRepository.SaveChangesAsync(cancellationToken);
-
-            return Result.Success(new ChangeEmailResult(user.Id.Value, user.Email.Value));
-        }
-        catch (DomainException ex)
-        {
+        if (user is null)
             return Result.Failure<ChangeEmailResult>(
-                new Error("User.DomainError", ex.Message));
-        }
+                new Error("User.NotFound", "User not found"));
+
+        if (await _userRepository.EmailExistsAsync(request.NewEmail, cancellationToken))
+            return Result.Failure<ChangeEmailResult>(
+                new Error("User.EmailAlreadyExists", "Email already exists"));
+
+        var nowUtc = DateTime.UtcNow;
+        user.ChangeEmail(request.NewEmail, nowUtc);
+
+        await _userRepository.SaveChangesAsync(cancellationToken);
+
+        return Result.Success(new ChangeEmailResult(user.Id.Value, user.Email.Value));
     }
 }

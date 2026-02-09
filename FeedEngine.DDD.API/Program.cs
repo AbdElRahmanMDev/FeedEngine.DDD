@@ -1,6 +1,10 @@
+using BuildingBlocks.Application.Behaviors;
 using FeedEngine.DDD.API.Extensions;
 using FeedEngine.DDD.API.Middleware;
+using FluentValidation;
+using Identity.Application;
 using Identity.Infrastructure;
+using MediatR;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +19,14 @@ builder.Host.UseSerilog((context, services, configuration) =>
 });
 // Add services to the container.
 builder.Services
-    .AddIdentityInfrastructure(builder.Configuration);
+    .AddIdentityInfrastructure(builder.Configuration)
+    .AddIdentityApplication();
+builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 
 builder.Services.AddControllers();

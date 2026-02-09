@@ -79,7 +79,7 @@ namespace Identity.Domain.Models
         {
             EnsureActive();
 
-            var next = ValueObjects.PasswordHash.FromHash(newPasswordHash);
+            var next = PasswordHash.FromHash(newPasswordHash);
             if (next == PasswordHash) return;
 
             PasswordHash = next;
@@ -92,23 +92,13 @@ namespace Identity.Domain.Models
         {
             if (Status == AccountStatus.Deleted) return;
 
-            Status = AccountStatus.Deleted;
+            Status = AccountStatus.InActive;
             Touch(nowUtc);
 
             Raise(new UserDeactivatedDomainEvent(Id, nowUtc));
         }
 
-        public void VerifyEmail()
-        {
-            EnsureActive();
 
-            if (EmailVerified) return;
-
-            EmailVerified = true;
-            Touch(DateTime.UtcNow);
-
-            Raise(new UserEmailVerifiedDomainEvent(Id, DateTime.UtcNow));
-        }
 
         private void EnsureActive()
         {

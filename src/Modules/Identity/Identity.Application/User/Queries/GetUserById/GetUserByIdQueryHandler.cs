@@ -20,17 +20,18 @@ internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, 
         using var connection = _sqlConnectionFactory.CreateConnection();
 
         const string sql = """
-            SELECT 
-                id AS UserId,
-                email AS Email,
-                username AS Username,
-                email_verified AS EmailVerified,
-                status AS Status,
-                created_at AS CreatedAt,
-                updated_at AS UpdatedAt
-            FROM users.Users
-            WHERE id = @UserId AND status != 2
-            """;
+                SELECT 
+                    [Id]            AS UserId,
+                    [Email]         AS Email,
+                    [Username]      AS Username,
+                    [EmailVerified] AS EmailVerified,
+                    [Status]        AS Status,
+                    [CreatedAt]     AS CreatedAt,
+                    [LastModified]  AS UpdatedAt
+                FROM [users].[Users]
+                WHERE [Id] = @UserId AND [Status] <> 2;
+                """;
+
 
         var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
             sql,

@@ -13,7 +13,7 @@ namespace Identity.Domain.ValueObjects
             if (string.IsNullOrWhiteSpace(hash))
                 throw new DomainException("Password hash is required.");
 
-            if (hash.Length < 20) // simple guard to avoid obvious mistakes (plain password)
+            if (hash.Length < 20)
                 throw new DomainException("Password hash looks invalid.");
 
             return new PasswordHash(hash);
