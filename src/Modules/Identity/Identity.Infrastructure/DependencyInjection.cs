@@ -25,6 +25,7 @@ public static class DependencyInjection
         var cs = configuration.GetConnectionString("AppDb") ??
             throw new InvalidOperationException("Connection string 'AppData' not found.");
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
 
         services.AddDbContext<UsersDbContext>(option =>
         {

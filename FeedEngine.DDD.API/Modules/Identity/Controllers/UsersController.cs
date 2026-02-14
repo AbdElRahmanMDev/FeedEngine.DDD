@@ -3,7 +3,9 @@ using FeedEngine.DDD.API.Modules.Identity.Contracts;
 using Identity.Application.User.Commands.ChangeEmail;
 using Identity.Application.User.Commands.ChangePassword;
 using Identity.Application.User.Commands.RegisterUser;
+using Identity.Application.User.Commands.UpdateMySettings;
 using Identity.Application.User.DTOs;
+using Identity.Application.User.Queries.GetMySettings;
 using Identity.Application.User.Queries.GetUserById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -103,6 +105,20 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
                 detail: error.Message,
                 statusCode: statusCode
             );
+        }
+
+        [HttpGet("me/settings")]
+        public async Task<IActionResult> GetMySettings(CancellationToken ct)
+        {
+            var result = await _mediator.Send(new GetMySettingsQuery(), ct);
+            return Ok(result);
+        }
+
+        [HttpPut("me/settings")]
+        public async Task<IActionResult> UpdateMySettings(UpdateMySettingsCommand command, CancellationToken ct)
+        {
+            await _mediator.Send(command, ct);
+            return NoContent();
         }
 
     }

@@ -10,7 +10,7 @@ namespace Identity.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users", schema: "Identity");
+            builder.ToTable("Users");
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)

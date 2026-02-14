@@ -17,6 +17,7 @@ namespace Identity.Infrastructure.Database
             _publisher = publisher;
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserSettings> UserSettings { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
