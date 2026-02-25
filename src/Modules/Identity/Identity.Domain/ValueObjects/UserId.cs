@@ -1,7 +1,7 @@
 ﻿using Identity.Domain.Exceptions;
 namespace Identity.Domain.ValueObjects;
 
-public record UserId
+public sealed record UserId
 {
     public Guid Value { get; }
     private UserId(Guid value) => Value = value;

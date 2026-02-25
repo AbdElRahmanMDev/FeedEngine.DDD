@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Application.Abstraction;
 using BuildingBlocks.Application.Abstraction.Data;
+using BuildingBlocks.Infrastructure.Persistence;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Application.Abstractions.Security;
 using Identity.Domain;
@@ -25,15 +26,19 @@ public static class DependencyInjection
         var cs = configuration.GetConnectionString("AppDb") ??
             throw new InvalidOperationException("Connection string 'AppData' not found.");
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUserSettingsRepository, UserSettingsRepository>();
-
-        services.AddDbContext<UsersDbContext>(option =>
+        services.AddHttpContextAccessor();
+        services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddDbContext<UsersDbContext>((sp, option) =>
         {
             option.UseSqlServer(cs, sql =>
             {
                 sql.MigrationsAssembly(typeof(UsersDbContext).Assembly.FullName);
                 sql.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schema.Users);
+
+
             });
+            option.AddInterceptors(sp.GetRequiredService<AuditSaveChangesInterceptor>());
+
         });
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
 

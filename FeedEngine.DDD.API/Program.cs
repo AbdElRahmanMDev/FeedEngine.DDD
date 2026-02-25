@@ -1,6 +1,8 @@
+using BuildingBlocks.Application.Abstraction;
 using BuildingBlocks.Application.Behaviors;
 using FeedEngine.DDD.API.Extensions;
 using FeedEngine.DDD.API.Middleware;
+using FeedEngine.DDD.API.Services;
 using FluentValidation;
 using Identity.Application;
 using Identity.Infrastructure;
@@ -9,7 +11,9 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Host.UseSerilog((context, services, configuration) =>
 {
     configuration

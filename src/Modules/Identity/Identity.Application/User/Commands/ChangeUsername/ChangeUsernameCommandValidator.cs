@@ -6,8 +6,7 @@ public sealed class ChangeUsernameCommandValidator : AbstractValidator<ChangeUse
 {
     public ChangeUsernameCommandValidator()
     {
-        RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("UserId is required");
+
 
         RuleFor(x => x.NewUsername)
             .NotEmpty().WithMessage("New username is required")

@@ -1,10 +1,8 @@
 ﻿using BuildingBlocks.Application.Messaging;
 using BuildingBlocks.Domain.Abstraction;
-using Identity.Application.Abstractions.Authentication;
 using Identity.Application.Abstractions.Security;
 using Identity.Application.User.DTOs;
 using Identity.Domain;
-using Identity.Domain.Models;
 
 namespace Identity.Application.User.Commands.RegisterUser;
 
@@ -12,14 +10,10 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtProvider _jwtProvider;
-    private readonly IUserSettingsRepository _userSettingsRepository;
-    public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtProvider jwtProvider, IUserSettingsRepository userSettingsRepository)
+    public RegisterUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         _passwordHasher = passwordHasher;
         _userRepository = userRepository;
-        _jwtProvider = jwtProvider;
-        _userSettingsRepository = userSettingsRepository;
     }
 
     public async Task<Result<RegisterUserResult>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -38,27 +32,13 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         var user = Domain.Models.User.Register(request.Email, request.Username, passwordHash, nowUtc);
 
-        var settings = UserSettings.CreateDefaults(user.Id);
-        _userSettingsRepository.Add(settings);
+
 
 
         await _userRepository.AddAsync(user, cancellationToken);
         await _userRepository.SaveChangesAsync(cancellationToken);
 
-        var userData = new UserDataDto(
-                                user.Id.Value,
-                                user.Email.Value,
-                                user.Username.Value
-                            );
-
-        var (token, expiresIn) = _jwtProvider.GenerateToken(userData);
-
-        return Result.Success(new RegisterUserResult(
-                user.Id.Value,
-                user.Email.Value,
-                token,
-                expiresIn
-       ));
+        return Result.Success(new RegisterUserResult(user.Id.Value, user.Email.Value, user.Username.Value));
     }
 
 

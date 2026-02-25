@@ -1,5 +1,5 @@
 ﻿using Identity.Application.Abstractions.Authentication;
-using Identity.Application.User.DTOs;
+using Identity.Domain.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,16 +17,16 @@ public sealed class JwtProvider : IJwtProvider
         _options = options.Value;
     }
 
-    public (string token, int expiresIn) GenerateToken(UserDataDto user)
+    public (string token, int expiresIn) GenerateToken(User user)
     {
         var now = DateTime.UtcNow;
         var expires = now.AddMinutes(_options.ExpiresInMinutes);
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new("username", user.Username),
+            new(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email.Value),
+            new("username", user.Username.Value),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -1,40 +1,43 @@
-﻿using BuildingBlocks.Application.Messaging;
-using Identity.Application.Abstractions.Authentication;
-using Identity.Domain;
+﻿using Identity.Domain;
+using Identity.Domain.ValueObjects;
 using MediatR;
 
 namespace Identity.Application.User.Commands.UpdateMySettings
 {
     public class UpdateMySettingsCommandHandler : ICommandHandler<UpdateMySettingsCommand, Unit>
     {
-        private readonly ICurrentUserService _currentUser;
-        private readonly IUserSettingsRepository _repo;
-        private readonly IUnitOfWork _uow; // or your DbContext
-
-        public UpdateMySettingsCommandHandler(
-            ICurrentUserService currentUser,
-            IUserSettingsRepository repo,
-            IUnitOfWork uow)
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IUserRepository _userRepository;
+        public UpdateMySettingsCommandHandler(IUserRepository userRepository, ICurrentUserService currentUser)
         {
-            _currentUser = currentUser;
-            _repo = repo;
-            _uow = uow;
+            _userRepository = userRepository;
+            _currentUserService = currentUser;
         }
 
-        public async Task Handle(UpdateMySettingsCommand request, CancellationToken ct)
+        public async Task<Result<Unit>> Handle(UpdateMySettingsCommand request, CancellationToken cancellationToken)
         {
-            var settings = await _repo.GetByUserIdAsync(_currentUser.UserId, ct)
-                          ?? throw new InvalidOperationException("User settings not found.");
 
-            settings.Update(
-                request,
-                request.TimeZone,
-                request.EmailNotificationsEnabled,
-                request.PushNotificationsEnabled,
-                request.IsProfilePrivate);
+            var user = await _userRepository.GetByIdAsync(UserId.Of(_currentUserService.UserId!.Value), cancellationToken);
 
-            await _uow.SaveChangesAsync(ct);
+            if (user is null)
+                return Result.Failure<Unit>(new Error("User not found", "User not found"));
+            var current = user.Settings;
+
+            var theme = request.Theme ?? current.Theme;
+
+            var language = request.Language ?? current.Language;
+            var notif = request.NotificationsEnabled ?? current.NotificationsEnabled;
+            var privacy = request.PrivacyLevel ?? current.PrivacyLevel;
+
+            user.ChangeSettings(
+                notif,
+                privacy,
+                DateTime.UtcNow,
+                theme,
+                request.Language!
+            ); await _userRepository.SaveChangesAsync(cancellationToken);
+
+            return Result<Unit>.Success(Unit.Value);
         }
-
     }
 }

@@ -2,12 +2,13 @@
 using FeedEngine.DDD.API.Modules.Identity.Contracts;
 using Identity.Application.User.Commands.ChangeEmail;
 using Identity.Application.User.Commands.ChangePassword;
+using Identity.Application.User.Commands.LoginUser;
 using Identity.Application.User.Commands.RegisterUser;
-using Identity.Application.User.Commands.UpdateMySettings;
 using Identity.Application.User.DTOs;
-using Identity.Application.User.Queries.GetMySettings;
 using Identity.Application.User.Queries.GetUserById;
+using Identity.Application.User.Queries.GetUserSettings;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeedEngine.DDD.API.Modules.Identity.Controllers
@@ -33,7 +34,6 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
             if (result.IsFailure)
                 return ToProblem(result.Error);
 
-            // Optional: point location to GET by id
             return CreatedAtAction(
                 nameof(GetById),
                 new { id = result.Value.UserId },
@@ -46,9 +46,10 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct)
+        [Authorize]
+        public async Task<IActionResult> GetById(CancellationToken ct)
         {
-            var query = new GetUserByIdQuery(id);
+            var query = new GetUserByIdQuery();
 
             Result<UserDto> result = await _mediator.Send(query, ct);
 
@@ -59,13 +60,14 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
         }
 
         // PUT api/identity/users/{id}/email
-        [HttpPut("{id:guid}/email")]
+        [HttpPut("email")]
         [ProducesResponseType(typeof(ChangeEmailResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangeEmail([FromRoute] Guid id, [FromBody] ChangeEmailRequest request, CancellationToken ct)
+        [Authorize]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailRequest request, CancellationToken ct)
         {
-            var command = new ChangeEmailCommand(id, request.NewEmail);
+            var command = new ChangeEmailCommand(request.NewEmail);
 
             Result<ChangeEmailResult> result = await _mediator.Send(command, ct);
 
@@ -83,7 +85,7 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
         public async Task<IActionResult> ChangePassword([FromRoute] Guid id, [FromBody] ChangePasswordRequest request, CancellationToken ct)
         {
             // Mapping plaintext password -> command property (named NewPasswordHash in your app layer)
-            var command = new ChangePasswordCommand(id, request.NewPassword);
+            var command = new ChangePasswordCommand(request.NewPassword);
 
             Result<ChangePasswordResult> result = await _mediator.Send(command, ct);
 
@@ -107,19 +109,73 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
             );
         }
 
+
+
+        //[HttpPut("me/settings")]
+        //public async Task<IActionResult> UpdateMySettings(UpdateMySettingsCommand command, CancellationToken ct)
+        //{
+        //    await _mediator.Send(command, ct);
+        //    return NoContent();
+        //}
+
         [HttpGet("me/settings")]
+        [ProducesResponseType(typeof(UserSettingsDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [Authorize]
         public async Task<IActionResult> GetMySettings(CancellationToken ct)
         {
-            var result = await _mediator.Send(new GetMySettingsQuery(), ct);
-            return Ok(result);
+            var query = new GetUserSettingsQuery();
+
+            Result<UserSettingsDto> result = await _mediator.Send(query, ct);
+
+            if (result.IsFailure)
+                return ToProblem(result.Error);
+
+            return Ok(result.Value);
+        }
+        [HttpPost("Login")]
+        [ProducesResponseType(typeof(LoginUserDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Login([FromBody] LoginUserRequest request, CancellationToken ct)
+        {
+            var command = new LoginUserCommand(
+                request.Email,
+                request.Password);
+
+            Result<LoginUserDTO> result = await _mediator.Send(command, ct);
+
+            if (result.IsFailure)
+                return ToProblem(result.Error);
+
+            return Ok(result.Value);
         }
 
-        [HttpPut("me/settings")]
-        public async Task<IActionResult> UpdateMySettings(UpdateMySettingsCommand command, CancellationToken ct)
-        {
-            await _mediator.Send(command, ct);
-            return NoContent();
-        }
+
+        //[HttpPut("me/settings")]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        //[Authorize]
+        //public async Task<IActionResult> UpdateMySettings([FromBody] UpdateMySettingsRequest request, CancellationToken ct)
+        //{
+        //    var command = new UpdateMySettingsCommand(
+        //        request.Language,
+        //        request.Theme,
+        //        request.EmailNotificationsEnabled,
+        //        request.PrivacyLevel,
+        //        request.IsProfilePrivate
+        //    );
+
+        //    Result<Unit> result = await _mediator.Send(command, ct);
+
+        //    if (result.IsFailure)
+        //        return ToProblem(result.Error);
+
+        //    return NoContent();
+        //}
 
     }
 

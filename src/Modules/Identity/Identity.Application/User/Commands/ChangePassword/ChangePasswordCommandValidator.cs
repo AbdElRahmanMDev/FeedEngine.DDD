@@ -6,8 +6,6 @@ public sealed class ChangePasswordCommandValidator : AbstractValidator<ChangePas
 {
     public ChangePasswordCommandValidator()
     {
-        RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("UserId is required");
 
         RuleFor(x => x.NewPasswordHash)
             .NotEmpty().WithMessage("New password hash is required")

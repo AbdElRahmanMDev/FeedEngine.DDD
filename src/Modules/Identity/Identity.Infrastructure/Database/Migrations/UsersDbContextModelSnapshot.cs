@@ -76,6 +76,51 @@ namespace Identity.Infrastructure.Database.Migrations
                             t.HasCheckConstraint("CK_Users_Status", "[Status] IN (1, 2, 3)");
                         });
                 });
+
+            modelBuilder.Entity("Identity.Domain.Models.User", b =>
+                {
+                    b.OwnsOne("Identity.Domain.ValueObjects.UserSettings", "Settings", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Language")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(10)
+                                .HasColumnType("nvarchar(10)")
+                                .HasDefaultValue("en")
+                                .HasColumnName("Language");
+
+                            b1.Property<bool>("NotificationsEnabled")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bit")
+                                .HasDefaultValue(true)
+                                .HasColumnName("NotificationsEnabled");
+
+                            b1.Property<int>("PrivacyLevel")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasDefaultValue(1)
+                                .HasColumnName("PrivacyLevel");
+
+                            b1.Property<int>("Theme")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasDefaultValue(1)
+                                .HasColumnName("Theme");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users", "users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Settings")
+                        .IsRequired();
+                });
 #pragma warning restore 612, 618
         }
     }

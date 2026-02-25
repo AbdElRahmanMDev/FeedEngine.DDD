@@ -17,6 +17,7 @@ namespace Identity.Domain.Models
         public Username Username { get; private set; }
         public PasswordHash PasswordHash { get; private set; }
 
+        public UserSettings Settings { get; private set; }
         public bool EmailVerified { get; private set; }
         public AccountStatus Status { get; private set; }
 
@@ -26,7 +27,7 @@ namespace Identity.Domain.Models
             Email = email;
             Username = username;
             PasswordHash = passwordHash;
-
+            Settings = UserSettings.Default();
             EmailVerified = false;
             Status = AccountStatus.Active;
 
@@ -41,6 +42,7 @@ namespace Identity.Domain.Models
                 Username.Create(username),
                 PasswordHash.FromHash(passwordHash),
                 nowUtc);
+            user.Settings = UserSettings.Default();
 
             user.Raise(new UserRegisteredDomainEvent(user.Id, user.Email, user.Username, nowUtc));
             return user;
@@ -59,6 +61,24 @@ namespace Identity.Domain.Models
             Touch(nowUtc);
 
             Raise(new UserEmailChangedDomainEvent(Id, old, next, nowUtc));
+        }
+        public void ChangeSettings(
+          bool notificationsEnabled,
+          PrivacyLevel privacyLevel,
+          DateTime utcNow,
+          ThemeMode theme = ThemeMode.Light,
+          string language = "en")
+        {
+            EnsureActive();
+
+            var next = UserSettings.Create(theme, language, notificationsEnabled, privacyLevel);
+
+            if (Equals(next, Settings)) return;
+
+            Settings = next;
+            Touch(utcNow);
+
+            // domain event later
         }
 
         public void ChangeUsername(string newUsername, DateTime nowUtc)

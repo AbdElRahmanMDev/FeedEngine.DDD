@@ -1,6 +1,4 @@
-using BuildingBlocks.Application.Abstraction.Data;
-using BuildingBlocks.Application.Messaging;
-using BuildingBlocks.Domain.Abstraction;
+
 using Dapper;
 using Identity.Application.User.DTOs;
 
@@ -9,16 +7,17 @@ namespace Identity.Application.User.Queries.GetUserById;
 internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
-
-    public GetUserByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+    private readonly ICurrentUserService _currentUserService;
+    public GetUserByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory, ICurrentUserService currentUserService)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
-
+        var userId = _currentUserService.UserId;
         const string sql = """
                 SELECT 
                     [Id]            AS UserId,
@@ -35,7 +34,7 @@ internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, 
 
         var user = await connection.QueryFirstOrDefaultAsync<UserDto>(
             sql,
-            new { UserId = request.UserId },
+            new { UserId = userId },
             commandTimeout: 5);
 
         if (user is null)

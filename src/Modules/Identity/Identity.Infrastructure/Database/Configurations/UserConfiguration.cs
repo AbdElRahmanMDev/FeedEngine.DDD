@@ -12,7 +12,6 @@ namespace Identity.Infrastructure.Database.Configurations
         {
             builder.ToTable("Users");
             builder.HasKey(x => x.Id);
-
             builder.Property(x => x.Id)
                 .HasConversion(
                     id => id.Value,
@@ -52,8 +51,36 @@ namespace Identity.Infrastructure.Database.Configurations
             });
 
             builder.Property(u => u.Status)
-                   .HasConversion<int>()      // enum <-> int
+                   .HasConversion<int>()
                    .IsRequired();
+
+            builder.OwnsOne(u => u.Settings, settings =>
+            {
+                settings.Property(x => x.Theme)
+                    .HasColumnName("Theme")
+                    .HasConversion<int>()
+                    .IsRequired()
+                    .HasDefaultValue(ThemeMode.Light);
+
+                settings.Property(x => x.Language)
+                    .HasColumnName("Language")
+                    .HasMaxLength(10)
+                    .IsRequired()
+                    .HasDefaultValue("en");
+
+                settings.Property(x => x.NotificationsEnabled)
+                    .HasColumnName("NotificationsEnabled")
+                    .IsRequired()
+                    .HasDefaultValue(true);
+
+                settings.Property(x => x.PrivacyLevel)
+                    .HasColumnName("PrivacyLevel")
+                    .HasConversion<int>()
+                    .IsRequired()
+                    .HasDefaultValue(PrivacyLevel.Public);
+            });
+
+            builder.Navigation(u => u.Settings).IsRequired();
 
             // Optional: default value at DB level
             builder.Property(u => u.Status)

@@ -32,7 +32,8 @@ public class UserRepository : IUserRepository
         await _usersDbContext.Users.Where(x => x.Id == id).SingleOrDefaultAsync();
 
 
-
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) =>
+        await _usersDbContext.Users.Where(x => x.Email == Email.Create(email)).SingleOrDefaultAsync();
     public Task<int> SaveChangesAsync(CancellationToken ct = default)
         => _usersDbContext.SaveChangesAsync(ct);
 }

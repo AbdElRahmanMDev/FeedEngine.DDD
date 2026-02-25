@@ -12,5 +12,8 @@ namespace Identity.Domain
         Task<bool> UsernameExistsAsync(string username, CancellationToken ct = default);
         Task<bool> EmailExistsAsync(string email, CancellationToken ct = default);
 
+        Task<User?> GetByEmailAsync(string email, CancellationToken ct = default);
+
+
     }
 }

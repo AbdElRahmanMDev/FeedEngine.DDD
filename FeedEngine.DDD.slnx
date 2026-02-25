@@ -26,6 +26,7 @@
     <Project Path="src/Modules/Notification/Notification.Application/Notification.Application.csproj" />
   </Folder>
   <Folder Name="/Modules/SocialGraph/">
+    <Project Path="SocialGraph.Domain/SocialGraph.Domain.csproj" Id="189d13cf-3547-4e73-a710-189e46705e6d" />
     <Project Path="src/Modules/SocialGraph/SocialGraph.Application/SocialGraph.Application.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">

@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Relationships\Commands\FollowUser\" />
+    <Folder Include="Relationships\Commands\AcceptFollow\" />
+    <Folder Include="Relationships\Commands\BlockUser\" />
+    <Folder Include="Relationships\DTOs\" />
+    <Folder Include="Relationships\Queries\GetFollowers\" />
+  </ItemGroup>
+
 </Project>

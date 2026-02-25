@@ -1,5 +1,3 @@
-using BuildingBlocks.Application.Messaging;
-using BuildingBlocks.Domain.Abstraction;
 using Identity.Domain;
 using Identity.Domain.ValueObjects;
 
@@ -8,15 +6,18 @@ namespace Identity.Application.User.Commands.ChangeEmail;
 internal sealed class ChangeEmailCommandHandler : ICommandHandler<ChangeEmailCommand, ChangeEmailResult>
 {
     private readonly IUserRepository _userRepository;
+    private readonly ICurrentUserService _currentUserService;
 
-    public ChangeEmailCommandHandler(IUserRepository userRepository)
+    public ChangeEmailCommandHandler(IUserRepository userRepository, ICurrentUserService currentUserService)
     {
+        _currentUserService = currentUserService;
         _userRepository = userRepository;
     }
 
     public async Task<Result<ChangeEmailResult>> Handle(ChangeEmailCommand request, CancellationToken cancellationToken)
     {
-        var userId = UserId.Of(request.UserId);
+
+        var userId = UserId.Of(_currentUserService.UserId!.Value);
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
 
         if (user is null)
