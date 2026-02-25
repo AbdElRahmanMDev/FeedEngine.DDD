@@ -8,6 +8,11 @@
     <Project Path="src/BuildingBlocks/BuildingBlocks.Infrastructure/BuildingBlocks.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Auditing/">
+    <Project Path="Auditing.Application/Auditing.Application.csproj" Id="d959eeec-63e0-422b-a1c1-be272f612e5a" />
+    <Project Path="Auditing.Domain/Auditing.Domain.csproj" Id="8a3c0c4a-d18a-427d-984c-0737637d02de" />
+    <Project Path="Auditing.Infrastructure/Auditing.Infrastructure.csproj" Id="df8b3cfa-ed7b-4cef-9074-0891f516f03a" />
+  </Folder>
   <Folder Name="/Modules/Content/">
     <Project Path="src/Modules/Content/Content.Application/Content.Application.csproj" />
     <Project Path="src/Modules/Content/Content.Domain/Content.Domain.csproj" />
