@@ -40,6 +40,7 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<IEntity>())
         {
+
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedAt = now;

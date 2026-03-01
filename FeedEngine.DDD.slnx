@@ -23,6 +23,7 @@
     <Project Path="src/Modules/Feed/Feed.Domain/Feed.Domain.csproj" />
   </Folder>
   <Folder Name="/Modules/Identity/">
+    <Project Path="Identity.Contracts/Identity.Contracts.csproj" Id="4a01ec9b-36b7-4153-84ef-4f5fd500bbab" />
     <Project Path="src/Modules/Identity/Identity.Application/Identity.Application.csproj" />
     <Project Path="src/Modules/Identity/Identity.Domain/Identity.Domain.csproj" />
     <Project Path="src/Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />

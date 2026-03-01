@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.Application.Abstraction;
 using BuildingBlocks.Domain.Abstraction;
+using BuildingBlocks.Infrastructure.Outbox;
 using Identity.Domain.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace Identity.Infrastructure.Database
             _publisher = publisher;
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
