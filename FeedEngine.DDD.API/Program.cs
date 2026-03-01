@@ -1,3 +1,5 @@
+using Auditing.Application;
+using Auditing.Infrastructure;
 using BuildingBlocks.Application.Abstraction;
 using BuildingBlocks.Application.Behaviors;
 using FeedEngine.DDD.API.Extensions;
@@ -24,7 +26,11 @@ builder.Host.UseSerilog((context, services, configuration) =>
 // Add services to the container.
 builder.Services
     .AddIdentityInfrastructure(builder.Configuration)
-    .AddIdentityApplication();
+    .AddIdentityApplication()
+    .AddAuditingApplication()
+    .AddAuditingInfrastructure(builder.Configuration);
+
+
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

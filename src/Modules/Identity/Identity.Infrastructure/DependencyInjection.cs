@@ -2,9 +2,11 @@
 using BuildingBlocks.Application.Abstraction.Data;
 using BuildingBlocks.Infrastructure.Persistence;
 using Identity.Application.Abstractions.Authentication;
+using Identity.Application.Abstractions.Messaging;
 using Identity.Application.Abstractions.Security;
 using Identity.Domain;
 using Identity.Infrastructure.Auth;
+using Identity.Infrastructure.BackgroundJobs;
 using Identity.Infrastructure.Database;
 using Identity.Infrastructure.Database.Connections;
 using Identity.Infrastructure.Repositories;
@@ -27,7 +29,9 @@ public static class DependencyInjection
             throw new InvalidOperationException("Connection string 'AppData' not found.");
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddHttpContextAccessor();
+        services.AddHostedService<OutboxPublisherBackgroundService>();
         services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddScoped<IOutboxService, OutboxService>();
         services.AddDbContext<UsersDbContext>((sp, option) =>
         {
             option.UseSqlServer(cs, sql =>

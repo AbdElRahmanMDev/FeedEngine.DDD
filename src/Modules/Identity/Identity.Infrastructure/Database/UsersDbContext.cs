@@ -31,11 +31,11 @@ namespace Identity.Infrastructure.Database
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
 
-            var result = await base.SaveChangesAsync(cancellationToken);
 
             await PublishDomainEvents();
+            return await base.SaveChangesAsync(cancellationToken);
 
-            return result;
+
 
         }
 
