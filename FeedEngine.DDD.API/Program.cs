@@ -9,6 +9,7 @@ using FluentValidation;
 using Identity.Application;
 using Identity.Infrastructure;
 using MediatR;
+using Notification.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +29,9 @@ builder.Services
     .AddIdentityInfrastructure(builder.Configuration)
     .AddIdentityApplication()
     .AddAuditingApplication()
-    .AddAuditingInfrastructure(builder.Configuration);
+    .AddAuditingInfrastructure(builder.Configuration).
+    AddNotificationInfrastructure(builder.Configuration)
+    ;
 
 
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());

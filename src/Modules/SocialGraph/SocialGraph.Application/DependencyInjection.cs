@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace SocialGraph.Application
+namespace SocialGraph.Application;
+
+public static class DependencyInjection
 {
-    internal class DependencyInjection
+    public static IServiceCollection AddSocialGraphApplication(this IServiceCollection services)
     {
+        services.AddMediatR(config =>
+        config.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
+        return services;
     }
 }

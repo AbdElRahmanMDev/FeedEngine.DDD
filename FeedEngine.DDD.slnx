@@ -29,10 +29,14 @@
     <Project Path="src/Modules/Identity/Identity.Infrastructure/Identity.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/Notification/">
+    <Project Path="Notification.Domain/Notification.Domain.csproj" Id="108d6604-304b-490c-a787-22e0d9ec32cb" />
+    <Project Path="Notification.Infrastructure/Notification.Infrastructure.csproj" Id="3a09bd9a-15dd-496f-bff7-d570eb72ea07" />
     <Project Path="src/Modules/Notification/Notification.Application/Notification.Application.csproj" />
   </Folder>
   <Folder Name="/Modules/SocialGraph/">
+    <Project Path="SocialGraph.Contracts/SocialGraph.Contracts.csproj" Id="27de7f0d-7c94-465e-821a-ac7036e5bc21" />
     <Project Path="SocialGraph.Domain/SocialGraph.Domain.csproj" Id="189d13cf-3547-4e73-a710-189e46705e6d" />
+    <Project Path="SocialGraph.Infrastructure/SocialGraph.Infrastructure.csproj" Id="1c2cece6-9f55-45f0-ab8c-ed2d6d856a2d" />
     <Project Path="src/Modules/SocialGraph/SocialGraph.Application/SocialGraph.Application.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">

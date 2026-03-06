@@ -26,6 +26,7 @@ public sealed class JwtProvider : IJwtProvider
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email.Value),
+            //new("security_stamp", user.SecurityStamp),
             new("username", user.Username.Value),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
