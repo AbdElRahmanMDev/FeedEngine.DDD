@@ -2,8 +2,9 @@
 {
     public enum AccountStatus
     {
-        Active = 1,
-        InActive = 2,
-        Deleted = 3
+        PendingEmailVerification = 1,
+        Active = 2,
+        Inactive = 3,
+        Deleted = 4
     }
 }

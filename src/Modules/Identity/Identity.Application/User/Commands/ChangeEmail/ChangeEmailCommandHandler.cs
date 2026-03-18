@@ -24,7 +24,7 @@ internal sealed class ChangeEmailCommandHandler : ICommandHandler<ChangeEmailCom
             return Result.Failure<ChangeEmailResult>(
                 new Error("User.NotFound", "User not found"));
 
-        if (await _userRepository.EmailExistsAsync(request.NewEmail, cancellationToken))
+        if (await _userRepository.EmailExistsAsync(Email.Create(request.NewEmail), cancellationToken))
             return Result.Failure<ChangeEmailResult>(
                 new Error("User.EmailAlreadyExists", "Email already exists"));
 

@@ -1,7 +1,8 @@
-﻿using BuildingBlocks.Application.Messaging;
+﻿using BuildingBlocks.Application.Abstraction;
+using BuildingBlocks.Application.Abstraction.Data;
+using BuildingBlocks.Application.Messaging;
 using BuildingBlocks.Domain.Abstraction;
 using Dapper;
-using SocialGraph.Application.Abstractions;
 using SocialGraph.Domain.Models.enums;
 using SocialGraph.Domain.ValueObjects;
 
@@ -9,10 +10,12 @@ namespace SocialGraph.Application.Relationships.Queries.GetFollowers
 {
     public sealed class GetFollowersQueryHandler : IQueryHandler<GetFollowersQuery, IReadOnlyList<UserId>>
     {
-        private readonly IDbConnectionFactory _db;
-        public GetFollowersQueryHandler(IDbConnectionFactory db)
+        private readonly ISqlConnectionFactory _db;
+        private readonly ICurrentUserService _currentUserService;
+        public GetFollowersQueryHandler(ISqlConnectionFactory db, ICurrentUserService currentUserService)
         {
             _db = db;
+            _currentUserService = currentUserService;
         }
         public async Task<Result<IReadOnlyList<UserId>>> Handle(GetFollowersQuery request, CancellationToken cancellationToken)
         {
@@ -27,11 +30,11 @@ namespace SocialGraph.Application.Relationships.Queries.GetFollowers
             // Assumption: UserId has a Guid value property like request.UserId.Value
             var args = new
             {
-                FollowedId = request.UserId.Value,
+                FollowedId = _currentUserService!.UserId!.Value,
                 AcceptedStatus = (int)FollowStatus.Accepted
             };
 
-            using var connection = await _db.OpenConnectionAsync(cancellationToken);
+            using var connection = _db.CreateConnection();
 
             var followerGuids = await connection.QueryAsync<Guid>(
                 new CommandDefinition(sql, args, cancellationToken: cancellationToken));

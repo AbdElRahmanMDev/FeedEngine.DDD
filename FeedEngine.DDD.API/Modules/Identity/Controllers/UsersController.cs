@@ -82,7 +82,7 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
         [ProducesResponseType(typeof(ChangePasswordResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangePassword([FromRoute] Guid id, [FromBody] ChangePasswordRequest request, CancellationToken ct)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken ct)
         {
             // Mapping plaintext password -> command property (named NewPasswordHash in your app layer)
             var command = new ChangePasswordCommand(request.NewPassword);

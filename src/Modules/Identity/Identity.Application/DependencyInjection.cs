@@ -1,3 +1,5 @@
+using Identity.Application.Services;
+using Identity.Contracts.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Application;
@@ -8,6 +10,8 @@ public static class DependencyInjection
     {
         services.AddMediatR(config =>
             config.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
+
+        services.AddSingleton<IIdentityUserValidator, IdentityUserValidator>();
 
         return services;
     }

@@ -3,5 +3,8 @@
 public sealed record RegisterUserResult(
     Guid UserId,
     string Email,
-    string Username
+    string Username,
+    bool RequiresEmailVerification,
+    string NextStep,
+    string Status
 );

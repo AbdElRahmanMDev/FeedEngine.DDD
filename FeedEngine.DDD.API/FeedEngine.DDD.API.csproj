@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>06d175ac-0c17-4749-8f67-9d6c41b9cee3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,13 +21,15 @@
     <Folder Include="Controllers\" />
     <Folder Include="Modules\Content\" />
     <Folder Include="Modules\Feed\" />
-    <Folder Include="Modules\SocialGraph\" />
-    <Folder Include="Modules\Notification\" />
+    <Folder Include="Modules\Notification\Contracts\" />
+    <Folder Include="Modules\SocialGraph\Contracts\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Auditing.Infrastructure\Auditing.Infrastructure.csproj" />
     <ProjectReference Include="..\Notification.Infrastructure\Notification.Infrastructure.csproj" />
+    <ProjectReference Include="..\SocialGraph.Infrastructure\SocialGraph.Infrastructure.csproj" />
+    <ProjectReference Include="..\src\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\src\Modules\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />
   </ItemGroup>
 

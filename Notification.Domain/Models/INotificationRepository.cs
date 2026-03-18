@@ -11,8 +11,11 @@ public interface INotificationRepository
         UserId recipientUserId,
         NotificationId notificationId,
         CancellationToken ct);
-
+    Task AddRange(IReadOnlyCollection<NotificationItem> notificationItems, CancellationToken cancellationToken = default);
     Task<int> MarkAllAsReadAsync(UserId recipientUserId, DateTimeOffset readAt, CancellationToken ct);
     Task<int> SaveChangesAsync(CancellationToken ct);
+    Task<NotificationItem?> GetWelcomeByRecipientIdAsync(
+    UserId recipientUserId,
+    CancellationToken cancellationToken);
 
 }

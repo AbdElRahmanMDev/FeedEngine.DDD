@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Notification.Application.Abstractions;
 using Notification.Domain.Models;
 using Notification.Infrastructure.Database;
 using Notification.Infrastructure.Repositories;
+using Notification.Infrastructure.Services;
 
 namespace Notification.Infrastructure
 {
@@ -24,6 +26,13 @@ namespace Notification.Infrastructure
                 });
 
             });
+            services.AddOptions<MailSettings>()
+                    .Bind(configuration.GetSection(nameof(MailSettings)))
+                    ;
+            services.AddOptions<VerificationOptions>()
+                .Bind(configuration.GetSection(nameof(VerificationOptions)));
+
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
             return services;
         }

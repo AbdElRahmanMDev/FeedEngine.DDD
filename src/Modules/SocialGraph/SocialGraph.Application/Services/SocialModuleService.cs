@@ -14,7 +14,7 @@ namespace SocialGraph.Application.Services
         public async Task<IReadOnlyList<Guid>> GetFollowersAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             var vo = new UserId(userId);
-            var followers = await _mediator.Send(new GetFollowersQuery(vo), cancellationToken);
+            var followers = await _mediator.Send(new GetFollowersQuery(), cancellationToken);
             return followers.Value.Select(x => x.Value).ToList();
         }
     }

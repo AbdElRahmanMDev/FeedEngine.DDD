@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Relationships\Commands\FollowUser\" />
     <Folder Include="Relationships\Commands\AcceptFollow\" />
     <Folder Include="Relationships\Commands\BlockUser\" />
     <Folder Include="Relationships\DTOs\" />
@@ -19,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Identity.Contracts\Identity.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\SocialGraph.Contracts\SocialGraph.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\SocialGraph.Domain\SocialGraph.Domain.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\BuildingBlocks.Application\BuildingBlocks.Application.csproj" />

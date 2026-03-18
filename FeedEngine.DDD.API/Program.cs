@@ -1,7 +1,9 @@
 using Auditing.Application;
 using Auditing.Infrastructure;
 using BuildingBlocks.Application.Abstraction;
+using BuildingBlocks.Application.Abstraction.Data;
 using BuildingBlocks.Application.Behaviors;
+using BuildingBlocks.Infrastructure.Persistence;
 using FeedEngine.DDD.API.Extensions;
 using FeedEngine.DDD.API.Middleware;
 using FeedEngine.DDD.API.Services;
@@ -11,6 +13,7 @@ using Identity.Infrastructure;
 using MediatR;
 using Notification.Infrastructure;
 using Serilog;
+using SocialGraph.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,9 +34,12 @@ builder.Services
     .AddAuditingApplication()
     .AddAuditingInfrastructure(builder.Configuration).
     AddNotificationInfrastructure(builder.Configuration)
+   .AddInfrastructureSocial(builder.Configuration)
     ;
-
-
+var cs = builder.Configuration.GetConnectionString("AppDb") ??
+           throw new InvalidOperationException("Connection string 'AppData' not found.");
+builder.Services.AddSingleton<ISqlConnectionFactory>(_ =>
+            new SqlConnectionFactory(builder.Configuration.GetConnectionString("AppDb")!));
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

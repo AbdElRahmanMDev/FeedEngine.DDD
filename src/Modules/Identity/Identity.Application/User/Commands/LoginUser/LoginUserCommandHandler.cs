@@ -1,10 +1,9 @@
-﻿using BuildingBlocks.Application.Messaging;
-using BuildingBlocks.Domain.Abstraction;
-using Identity.Application.Abstractions.Authentication;
+﻿using Identity.Application.Abstractions.Authentication;
 using Identity.Application.Abstractions.Security;
 using Identity.Application.User.DTOs;
 using Identity.Domain;
 using Identity.Domain.Models.enums;
+using Identity.Domain.ValueObjects;
 
 namespace Identity.Application.User.Commands.LoginUser;
 
@@ -22,12 +21,13 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, LoginUs
     }
     public async Task<Result<LoginUserDTO>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+
+        var user = await _userRepository.GetByEmailAsync(Email.Create(request.Email), cancellationToken);
 
         if (user is null)
             return Result.Failure<LoginUserDTO>(new Error("Auth.InvalidCredentials", "Invalid credentials"));
 
-        if (user.Status == AccountStatus.InActive || user.Status == AccountStatus.Deleted)
+        if (user.Status == AccountStatus.Inactive || user.Status == AccountStatus.Deleted)
             return Result.Failure<LoginUserDTO>(new Error("Auth.UserNotActive", "User is not active"));
 
         bool valid = _passwordHasher.VerifyHashedPassword(request.Password, user.PasswordHash.Value);

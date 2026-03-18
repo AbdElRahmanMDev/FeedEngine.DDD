@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SocialGraph.Domain.Models;
+using SocialGraph.Domain.ValueObjects;
+
 
 namespace SocialGraph.Domain
 {
-    internal interface IFollowRelationshipRepository
+    public interface IFollowRelationshipRepository
     {
+        Task<bool> IsFollowingAsync(UserId followerId, UserId followingId);
+        Task AddAsync(FollowRelationship followRelationship);
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
     }
 }

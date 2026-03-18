@@ -3,5 +3,5 @@ using SocialGraph.Domain.ValueObjects;
 
 namespace SocialGraph.Application.Relationships.Queries.GetFollowers;
 
-public sealed record GetFollowersQuery(UserId UserId) : IQuery<IReadOnlyList<UserId>>;
+public sealed record GetFollowersQuery() : IQuery<IReadOnlyList<UserId>>;
 

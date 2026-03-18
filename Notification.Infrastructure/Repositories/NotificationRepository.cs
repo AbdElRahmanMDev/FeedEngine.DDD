@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notification.Domain.Models;
+using Notification.Domain.Models.enums;
 using Notification.Domain.ValueObjects;
 using Notification.Infrastructure.Database;
-
 
 namespace Notification.Infrastructure.Repositories
 {
@@ -18,6 +18,21 @@ namespace Notification.Infrastructure.Repositories
         {
             _db.Notifications.Add(notification);
             return Task.CompletedTask;
+        }
+
+        public async Task AddRange(IReadOnlyCollection<NotificationItem> notificationItems, CancellationToken cancellationToken = default)
+        {
+            await _db.Notifications.AddRangeAsync(notificationItems, cancellationToken);
+        }
+        public async Task<NotificationItem?> GetWelcomeByRecipientIdAsync(
+            UserId recipientUserId,
+            CancellationToken cancellationToken)
+        {
+            return await _db.Notifications
+                .FirstOrDefaultAsync(
+                    x => x.RecipientUserId == recipientUserId &&
+                         x.Type == NotificationType.Welcome,
+                    cancellationToken);
         }
 
         public Task<Domain.Models.NotificationItem?> GetForUserByIdAsync(UserId recipientUserId, NotificationId notificationId, CancellationToken ct)

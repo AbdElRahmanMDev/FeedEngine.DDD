@@ -16,6 +16,42 @@ public sealed class JwtProvider : IJwtProvider
     {
         _options = options.Value;
     }
+    public (string token, int expiresIn) GenerateEmailVerificationToken(Domain.Models.User user)
+    {
+        var now = DateTime.UtcNow;
+        var expires = now.AddMinutes(_options.ExpiresInMinutes);
+
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, user.Id.Value.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email.Value),
+            new(JwtRegisteredClaimNames.UniqueName, user.Username.Value),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+            // important: distinguish this from access token
+            new("purpose", "email_verification")
+        };
+
+        var signingCredentials = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
+            SecurityAlgorithms.HmacSha256);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = expires,
+            Issuer = _options.Issuer,
+            Audience = _options.Audience,
+            SigningCredentials = signingCredentials
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+        var token = tokenHandler.WriteToken(securityToken);
+        var expiresInSeconds = (int)(expires - now).TotalSeconds;
+
+        return (token, expiresInSeconds);
+    }
 
     public (string token, int expiresIn) GenerateToken(User user)
     {

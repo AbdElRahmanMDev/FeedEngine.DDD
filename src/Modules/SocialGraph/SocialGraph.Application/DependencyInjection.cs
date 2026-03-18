@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SocialGraph.Application.Services;
+using SocialGraph.Contracts.Abstractions;
 
 namespace SocialGraph.Application;
 
@@ -8,6 +10,8 @@ public static class DependencyInjection
     {
         services.AddMediatR(config =>
         config.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
+        services.AddScoped<ISocialModule, SocialModuleService>();
+
         return services;
     }
 }

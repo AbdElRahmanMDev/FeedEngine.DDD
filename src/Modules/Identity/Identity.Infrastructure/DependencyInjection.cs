@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.Application.Abstraction;
-using BuildingBlocks.Application.Abstraction.Data;
 using BuildingBlocks.Infrastructure.Persistence;
 using Identity.Application.Abstractions.Authentication;
 using Identity.Application.Abstractions.Messaging;
@@ -8,7 +7,6 @@ using Identity.Domain;
 using Identity.Infrastructure.Auth;
 using Identity.Infrastructure.BackgroundJobs;
 using Identity.Infrastructure.Database;
-using Identity.Infrastructure.Database.Connections;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,8 +44,7 @@ public static class DependencyInjection
         });
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
 
-        services.AddSingleton<ISqlConnectionFactory>(_ =>
-            new SqlConnectionFactory(configuration.GetConnectionString("AppDb")!));
+
 
         services.AddOptions<JwtOptions>()
        .Bind(configuration.GetSection("Jwt"))

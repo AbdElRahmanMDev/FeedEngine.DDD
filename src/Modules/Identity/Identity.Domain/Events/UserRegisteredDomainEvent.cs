@@ -5,6 +5,7 @@ namespace Identity.Domain.Events;
 public sealed record UserRegisteredDomainEvent(
 UserId UserId,
 Email Email,
+
 Username Username,
 DateTime OccurredOnUtc
 ) : IDomainEvent;

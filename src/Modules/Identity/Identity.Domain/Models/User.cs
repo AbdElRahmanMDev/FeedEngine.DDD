@@ -29,7 +29,7 @@ namespace Identity.Domain.Models
             PasswordHash = passwordHash;
             Settings = UserSettings.Default();
             EmailVerified = false;
-            Status = AccountStatus.Active;
+            Status = AccountStatus.PendingEmailVerification;
 
             CreatedAt = nowUtc;
         }
@@ -47,21 +47,39 @@ namespace Identity.Domain.Models
             user.Raise(new UserRegisteredDomainEvent(user.Id, user.Email, user.Username, nowUtc));
             return user;
         }
+        public void MarkEmailAsVerified(DateTime nowUtc)
+        {
+            if (Status == AccountStatus.Deleted)
+                throw new DomainException("Deleted user cannot be verified.");
+
+            if (EmailVerified && Status == AccountStatus.Active)
+                return;
+
+            EmailVerified = true;
+            Status = AccountStatus.Active;
+            Touch(nowUtc);
+
+            Raise(new UserEmailVerifiedDomainEvent(Id, Email, nowUtc));
+        }
+
         public void ChangeEmail(string newEmail, DateTime nowUtc)
         {
-            EnsureActive();
+            EnsureNotDeleted();
 
             var next = Email.Create(newEmail);
             if (next == Email) return;
 
             var old = Email;
-
             Email = next;
-            EmailVerified = false; // new email requires verification again
+
+            EmailVerified = false;
+            Status = AccountStatus.PendingEmailVerification;
             Touch(nowUtc);
 
             Raise(new UserEmailChangedDomainEvent(Id, old, next, nowUtc));
         }
+
+
         public void ChangeSettings(
           bool notificationsEnabled,
           PrivacyLevel privacyLevel,
@@ -112,10 +130,16 @@ namespace Identity.Domain.Models
         {
             if (Status == AccountStatus.Deleted) return;
 
-            Status = AccountStatus.InActive;
+            Status = AccountStatus.Inactive;
             Touch(nowUtc);
 
             Raise(new UserDeactivatedDomainEvent(Id, nowUtc));
+        }
+
+        public void EnsureNotDeleted()
+        {
+            if (Status != AccountStatus.Active)
+                throw new DomainException("User is not active.");
         }
 
 

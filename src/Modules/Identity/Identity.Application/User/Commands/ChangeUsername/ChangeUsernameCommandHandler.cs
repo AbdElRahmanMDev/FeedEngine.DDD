@@ -23,7 +23,7 @@ internal sealed class ChangeUsernameCommandHandler : ICommandHandler<ChangeUsern
             return Result.Failure<ChangeUsernameResult>(
                 new Error("User.NotFound", "User not found"));
 
-        if (await _userRepository.UsernameExistsAsync(request.NewUsername, cancellationToken))
+        if (await _userRepository.UsernameExistsAsync(Username.Create(request.NewUsername), cancellationToken))
             return Result.Failure<ChangeUsernameResult>(
                 new Error("User.UsernameExists", "Username already exists"));
 
