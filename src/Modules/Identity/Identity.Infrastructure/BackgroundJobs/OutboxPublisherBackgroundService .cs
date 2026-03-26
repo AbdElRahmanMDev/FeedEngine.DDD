@@ -60,7 +60,7 @@ namespace Identity.Infrastructure.BackgroundJobs
 
                 await dbContext.SaveChangesAsync(stoppingToken);
 
-                await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(40), stoppingToken);
             }
         }
     }

@@ -31,6 +31,8 @@ namespace Notification.Infrastructure
                     ;
             services.AddOptions<VerificationOptions>()
                 .Bind(configuration.GetSection(nameof(VerificationOptions)));
+            services.AddScoped<IVerificationLinkFactory, VerificationLinkFactory>();
+            services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<INotificationRepository, NotificationRepository>();

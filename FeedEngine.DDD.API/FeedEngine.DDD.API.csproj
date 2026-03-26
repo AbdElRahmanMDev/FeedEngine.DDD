@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Auditing.Infrastructure\Auditing.Infrastructure.csproj" />
+    <ProjectReference Include="..\Auditing.Abstractions\Auditing.Abstractions.csproj" />
     <ProjectReference Include="..\Notification.Infrastructure\Notification.Infrastructure.csproj" />
     <ProjectReference Include="..\SocialGraph.Infrastructure\SocialGraph.Infrastructure.csproj" />
     <ProjectReference Include="..\src\BuildingBlocks\BuildingBlocks.Infrastructure\BuildingBlocks.Infrastructure.csproj" />

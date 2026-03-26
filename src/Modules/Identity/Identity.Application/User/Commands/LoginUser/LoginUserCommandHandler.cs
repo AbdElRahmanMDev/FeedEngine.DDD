@@ -27,16 +27,13 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, LoginUs
         if (user is null)
             return Result.Failure<LoginUserDTO>(new Error("Auth.InvalidCredentials", "Invalid credentials"));
 
-        if (user.Status == AccountStatus.Inactive || user.Status == AccountStatus.Deleted)
+        if (user.Status == AccountStatus.Inactive)
             return Result.Failure<LoginUserDTO>(new Error("Auth.UserNotActive", "User is not active"));
 
         bool valid = _passwordHasher.VerifyHashedPassword(request.Password, user.PasswordHash.Value);
 
         if (!valid)
             return Result.Failure<LoginUserDTO>(new Error("Auth.InvalidCredentials", "Invalid credentials"));
-
-
-
 
         var (token, expiresIn) = _jwtProvider.GenerateToken(user);
 

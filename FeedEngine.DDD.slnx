@@ -9,9 +9,7 @@
   </Folder>
   <Folder Name="/Modules/" />
   <Folder Name="/Modules/Auditing/">
-    <Project Path="Auditing.Application/Auditing.Application.csproj" Id="d959eeec-63e0-422b-a1c1-be272f612e5a" />
-    <Project Path="Auditing.Domain/Auditing.Domain.csproj" Id="8a3c0c4a-d18a-427d-984c-0737637d02de" />
-    <Project Path="Auditing.Infrastructure/Auditing.Infrastructure.csproj" Id="df8b3cfa-ed7b-4cef-9074-0891f516f03a" />
+    <Project Path="Auditing.Abstractions/Auditing.Abstractions.csproj" Id="ed22076b-28d8-4125-b5f4-6a93f4f60c8c" />
   </Folder>
   <Folder Name="/Modules/Content/">
     <Project Path="src/Modules/Content/Content.Application/Content.Application.csproj" />
@@ -19,6 +17,7 @@
     <Project Path="src/Modules/Content/Content.Infrastructure/Content.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/Modules/Feed/">
+    <Project Path="Feed.Infrastructure/Feed.Infrastructure.csproj" Id="34f44ba1-180f-4b89-a9d7-45facafbbd1e" />
     <Project Path="src/Modules/Feed/Feed.Application/Feed.Application.csproj" />
     <Project Path="src/Modules/Feed/Feed.Domain/Feed.Domain.csproj" />
   </Folder>

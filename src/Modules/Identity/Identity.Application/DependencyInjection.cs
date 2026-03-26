@@ -11,7 +11,7 @@ public static class DependencyInjection
         services.AddMediatR(config =>
             config.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection)));
 
-        services.AddSingleton<IIdentityUserValidator, IdentityUserValidator>();
+        services.AddScoped<IIdentityUserValidator, IdentityUserValidator>();
 
         return services;
     }

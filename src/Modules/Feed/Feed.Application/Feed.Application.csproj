@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\SocialGraph.Contracts\SocialGraph.Contracts.csproj" />
+    <ProjectReference Include="..\Feed.Domain\Feed.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

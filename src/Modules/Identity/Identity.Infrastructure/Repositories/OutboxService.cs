@@ -32,5 +32,10 @@ namespace Identity.Infrastructure.Repositories
             await _usersDbContext.OutboxMessages.AddAsync(message);
 
         }
+
+        public Task<int> SavechangeAsync(CancellationToken cancellationToken = default)
+        {
+            return _usersDbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

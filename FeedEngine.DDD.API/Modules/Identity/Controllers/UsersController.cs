@@ -22,7 +22,7 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
         public UsersController(IMediator mediator) => _mediator = mediator;
 
         // POST api/identity/users/register
-        [HttpPost("register")]
+        [HttpPost("Register")]
         [ProducesResponseType(typeof(RegisterUserResult), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] RegisterUserRequest request, CancellationToken ct)
@@ -35,21 +35,21 @@ namespace FeedEngine.DDD.API.Modules.Identity.Controllers
                 return ToProblem(result.Error);
 
             return CreatedAtAction(
-                nameof(GetById),
+                nameof(GetCurrentUser),
                 new { id = result.Value.UserId },
                 result.Value
             );
         }
 
         // GET api/identity/users/{id}
-        [HttpGet("{id:guid}")]
+        [HttpGet("me")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [Authorize]
-        public async Task<IActionResult> GetById(CancellationToken ct)
+        public async Task<IActionResult> GetCurrentUser(CancellationToken ct)
         {
-            var query = new GetUserByIdQuery();
+            var query = new GetCurrentUserQuery();
 
             Result<UserDto> result = await _mediator.Send(query, ct);
 

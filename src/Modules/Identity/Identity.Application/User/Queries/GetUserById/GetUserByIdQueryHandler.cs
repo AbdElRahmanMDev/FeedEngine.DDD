@@ -4,17 +4,17 @@ using Identity.Application.User.DTOs;
 
 namespace Identity.Application.User.Queries.GetUserById;
 
-internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
+internal sealed class GetCurrentUserQueryHandler : IQueryHandler<GetCurrentUserQuery, UserDto>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
     private readonly ICurrentUserService _currentUserService;
-    public GetUserByIdQueryHandler(ISqlConnectionFactory sqlConnectionFactory, ICurrentUserService currentUserService)
+    public GetCurrentUserQueryHandler(ISqlConnectionFactory sqlConnectionFactory, ICurrentUserService currentUserService)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
         _currentUserService = currentUserService;
     }
 
-    public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserDto>> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
         var userId = _currentUserService.UserId;

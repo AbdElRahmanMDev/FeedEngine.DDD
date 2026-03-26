@@ -23,6 +23,8 @@ public class EmailVerificationRequestedIntegrationEventHandler : INotificationHa
 
     public async Task Handle(EmailVerificationRequestedIntegrationEvent integrationEvent, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("loggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg");
+
         var verificationLink = _verificationLinkFactory.Create(integrationEvent.token);
 
         var subject = "Verify your email";

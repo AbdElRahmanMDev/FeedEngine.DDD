@@ -50,6 +50,8 @@ public class UserRegisteredDomainEventHandler : INotificationHandler<UserRegiste
         await _outboxService.AddAsync(auditIntegrationEvent, cancellationToken);
         await _outboxService.AddAsync(notificationIntegrationEvent, cancellationToken);
 
+        await _outboxService.SavechangeAsync(cancellationToken);
+
         _logger.LogInformation("User registered: {UserId}, {Email}", user.Id.Value, user.Email.Value);
 
 

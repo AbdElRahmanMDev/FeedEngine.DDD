@@ -1,5 +1,4 @@
-using Auditing.Application;
-using Auditing.Infrastructure;
+using Auditing.Abstractions;
 using BuildingBlocks.Application.Abstraction;
 using BuildingBlocks.Application.Abstraction.Data;
 using BuildingBlocks.Application.Behaviors;
@@ -11,6 +10,7 @@ using FluentValidation;
 using Identity.Application;
 using Identity.Infrastructure;
 using MediatR;
+using Notification.Application;
 using Notification.Infrastructure;
 using Serilog;
 using SocialGraph.Infrastructure;
@@ -31,9 +31,9 @@ builder.Host.UseSerilog((context, services, configuration) =>
 builder.Services
     .AddIdentityInfrastructure(builder.Configuration)
     .AddIdentityApplication()
-    .AddAuditingApplication()
-    .AddAuditingInfrastructure(builder.Configuration).
-    AddNotificationInfrastructure(builder.Configuration)
+    .AddAuditingModule(builder.Configuration)
+    .AddNotificationApplication()
+   .AddNotificationInfrastructure(builder.Configuration)
    .AddInfrastructureSocial(builder.Configuration)
     ;
 var cs = builder.Configuration.GetConnectionString("AppDb") ??

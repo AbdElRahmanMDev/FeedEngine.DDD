@@ -18,6 +18,8 @@ namespace Identity.Infrastructure.Database.Configurations
                     value => UserId.Of(value))
                 .ValueGeneratedNever();
 
+            builder.HasQueryFilter(x => !x.IsDeleted);
+
             builder.Property(x => x.Email)
                 .HasMaxLength(100)
                 .HasConversion(x => x.Value, x => Email.Create(x));

@@ -30,7 +30,6 @@ namespace Identity.Domain.Models
             Settings = UserSettings.Default();
             EmailVerified = false;
             Status = AccountStatus.PendingEmailVerification;
-
             CreatedAt = nowUtc;
         }
 
@@ -49,7 +48,7 @@ namespace Identity.Domain.Models
         }
         public void MarkEmailAsVerified(DateTime nowUtc)
         {
-            if (Status == AccountStatus.Deleted)
+            if (IsDeleted)
                 throw new DomainException("Deleted user cannot be verified.");
 
             if (EmailVerified && Status == AccountStatus.Active)
@@ -87,7 +86,7 @@ namespace Identity.Domain.Models
           ThemeMode theme = ThemeMode.Light,
           string language = "en")
         {
-            EnsureActive();
+            EnsureCanChangeProfile();
 
             var next = UserSettings.Create(theme, language, notificationsEnabled, privacyLevel);
 
@@ -101,7 +100,7 @@ namespace Identity.Domain.Models
 
         public void ChangeUsername(string newUsername, DateTime nowUtc)
         {
-            EnsureActive();
+            EnsureCanChangeProfile();
 
             var next = Username.Create(newUsername);
             if (next == Username) return;
@@ -115,7 +114,7 @@ namespace Identity.Domain.Models
 
         public void ChangePasswordHash(string newPasswordHash, DateTime nowUtc)
         {
-            EnsureActive();
+            EnsureCanChangeProfile();
 
             var next = PasswordHash.FromHash(newPasswordHash);
             if (next == PasswordHash) return;
@@ -128,7 +127,7 @@ namespace Identity.Domain.Models
 
         public void Deactivate(DateTime nowUtc)
         {
-            if (Status == AccountStatus.Deleted) return;
+            if (IsDeleted) return;
 
             Status = AccountStatus.Inactive;
             Touch(nowUtc);
@@ -138,15 +137,15 @@ namespace Identity.Domain.Models
 
         public void EnsureNotDeleted()
         {
-            if (Status != AccountStatus.Active)
-                throw new DomainException("User is not active.");
+            if (IsDeleted)
+                throw new DomainException("Deleted user cannot perform this action.");
         }
 
 
 
-        private void EnsureActive()
+        private void EnsureCanChangeProfile()
         {
-            if (Status != AccountStatus.Active)
+            if (IsDeleted || Status != AccountStatus.Active)
                 throw new DomainException("User is not active.");
         }
 
